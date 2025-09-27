@@ -1,0 +1,142 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1000;
+}
+
+.drawer {
+  width: 90%;
+  border: 1px solid #202020;
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  height: 400px;
+  border-radius: 16px 16px;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.1);
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: #1f1f1f;
+}
+
+.header {
+  // width: inherit;
+
+  // border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+
+  .handle {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: #ccc;
+    border-radius: 2px;
+  }
+
+  .title {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .backBtn {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 5px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #ccc;
+      border: none;
+      background-color: transparent;
+      svg {
+        transform: rotate(-180deg);
+      }
+    }
+
+    .closeIcon {
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      svg {
+        transform: rotate(-45deg);
+      }
+    }
+
+    .hideBackButton {
+      visibility: hidden;
+    }
+  }
+}
+
+.content {
+  position: relative;
+  overflow-y: auto;
+  flex-grow: 1;
+  max-height: calc(90vh - 60px);
+  min-height: 200px;
+}
+
+.panel {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  padding: 8px 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0 8px;
+
+  li {
+    .item {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-radius: 8px;
+      width: inherit;
+      background-color: rgb(37, 37, 37);
+      margin-bottom: 8px;
+
+      .topSection {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #d8d8d8;
+        span {
+          margin-bottom: 2px;
+          font-size: 20px;
+        }
+      }
+      .bottomSection {
+        color: #b0b0b0;
+        font-size: medium;
+      }
+
+      &:hover {
+        background: #343434;
+      }
+
+      &:focus {
+        outline: 2px solid #636364;
+      }
+    }
+  }
+}
