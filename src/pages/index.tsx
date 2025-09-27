@@ -1,5 +1,8 @@
-import NestedDrawer from "@/components/NestedDrawer";
+const NestedDrawer = dynamic(() => import("@/components/NestedDrawer"), {
+  ssr: false,
+});
 import { MenuItem } from "@/types/NestedDrawer";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 
 export const sampleMenu: MenuItem[] = [
