@@ -1,31 +1,36 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./nestedDrawer.module.scss";
 import PlusIcon from "@/assets/PlusIcon";
-import { MenuItem } from "@/types/NestedDrawer";
 import NavigationImage from "@/assets/NavigationImage";
+import { MenuItem } from "@/types/NestedDrawer";
 
 type Props = {
   open: boolean;
   onClose: () => void;
   menu: MenuItem[];
+  stack: MenuItem[][];
+  setStack: React.Dispatch<React.SetStateAction<MenuItem[][]>>;
 };
 
-export default function NestedDrawer({ open, onClose, menu }: Props) {
-  const [stack, setStack] = useState<MenuItem[][]>([menu]);
-  const [direction, setDirection] = useState<"forward" | "back">("forward");
+export default function NestedDrawer({
+  open,
+  onClose,
+  menu,
+  stack,
+  setStack,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const modalRoot = typeof window !== "undefined" ? document.body : null;
-
   const currentPanel = stack[stack.length - 1];
 
+  const [direction, setDirection] = useState<"forward" | "back">("forward");
+
   useEffect(() => {
-    if (open) {
-      setStack([menu]);
-      focusFirstItem();
-    }
+    if (open) focusFirstItem();
   }, [open, menu]);
 
   useEffect(() => {
@@ -83,47 +88,54 @@ export default function NestedDrawer({ open, onClose, menu }: Props) {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             drag="y"
             dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.3}
+            dragElastic={0.2}
             onDragEnd={(_, info) => {
-              if (info.offset.y > 100 || info.velocity.y > 500) {
-                onClose();
-              }
+              if (info.offset.y > 120 || info.velocity.y > 500) onClose();
             }}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* HEADER */}
             <div className={styles.header}>
               <div className={styles.handle} />
               <div className={styles.title}>
                 <button
                   onClick={handleBack}
                   className={`${
-                    stack.length > 1 ? styles.backButton : styles.hideBackButton
-                  } ${styles.backBtn}`}
+                    stack.length > 1 ? styles.backBtn : styles.hideBackButton
+                  }`}
                   aria-label="Back"
                 >
-                  <NavigationImage fill="#ccc" /> Back
+                  <NavigationImage fill="#555" /> Back
                 </button>
                 <div
                   onClick={onClose}
                   aria-label="Close"
                   className={styles.closeIcon}
                 >
-                  <PlusIcon fill="#ccc" />
+                  <PlusIcon fill="#888" />
                 </div>
               </div>
             </div>
 
+            {/* CONTENT */}
             <div className={styles.content} ref={containerRef}>
               <AnimatePresence initial={false} custom={direction} mode="wait">
                 <motion.div
                   key={stack.length}
                   className={styles.panel}
+                  custom={direction}
                   initial={{
-                    x: direction === "forward" ? 300 : -300,
+                    x:
+                      direction === "forward" || stack.length === 1
+                        ? 300
+                        : -300,
                     opacity: 0,
                   }}
                   animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: direction === "forward" ? -300 : 300, opacity: 0 }}
+                  exit={{
+                    x: direction === "forward" ? -300 : 300,
+                    opacity: 0,
+                  }}
                   transition={{ duration: 0.25 }}
                 >
                   <ul className={styles.list}>
@@ -143,20 +155,26 @@ export default function NestedDrawer({ open, onClose, menu }: Props) {
                           aria-expanded={item.children ? "false" : undefined}
                         >
                           <div className={styles.topSection}>
-                            <span>{item.label}</span>
+                            {item.icon && (
+                              <span className={styles.icon}>{item.icon}</span>
+                            )}
+                            <span className={styles.label}>{item.label}</span>
                             {item.children && (
-                              <span aria-hidden>
+                              <span className={styles.arrow}>
                                 <NavigationImage
                                   height="16"
                                   width="16"
-                                  fill="#ccc"
+                                  fill="#888"
                                 />
                               </span>
                             )}
                           </div>
-                          <div className={styles?.bottomSection}>
-                            {item?.desc}
-                          </div>
+
+                          {item.desc && (
+                            <div className={styles.bottomSection}>
+                              {item.desc}
+                            </div>
+                          )}
                         </div>
                       </li>
                     ))}

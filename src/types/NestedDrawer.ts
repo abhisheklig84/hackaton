@@ -4,4 +4,5 @@ export interface MenuItem {
   href?: string;
   desc: string;
   children?: MenuItem[];
+  icon?: React.ReactNode;
 }

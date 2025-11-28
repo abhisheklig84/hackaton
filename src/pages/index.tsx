@@ -160,6 +160,8 @@ export const sampleMenu: MenuItem[] = [
 
 export default function Home() {
   const [open, setOpen] = useState(true);
+
+  const [stack, setStack] = useState<MenuItem[][]>([sampleMenu]);
   return (
     <div className="page">
       <button className="pageBtn" onClick={() => setOpen(true)}>
@@ -169,6 +171,8 @@ export default function Home() {
         open={open}
         onClose={() => setOpen(false)}
         menu={sampleMenu}
+        stack={stack}
+        setStack={setStack}
       />
     </div>
   );
